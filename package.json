@@ -1,0 +1,21 @@
+{
+  "name": "kekw-bot",
+  "version": "1.0.0",
+  "description": "Replicates CarlBot's \"starboard\" but instead with KEKWs.",
+  "main": "kekw.js",
+  "dependencies": {
+    "discord.js": "^13.0.1",
+    "dotenv": "^10.0.0",
+    "simple-json-db": "^1.2.3"
+  },
+  "devDependencies": {
+    "eslint": "^7.32.0"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node kekw.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
