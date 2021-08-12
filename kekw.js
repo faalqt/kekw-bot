@@ -20,61 +20,66 @@ client.once('ready', () => {
 });
 
 client.on('messageReactionAdd', async (reaction, user) =>{
-	if(reaction.partial){
-		try{
-			await reaction.fetch();
-		} catch (error) {
-			console.error("Something went wrong fetching the message:", error);
-			return
-		}
-	}
-
+	
 	emote = reaction.emoji
 	count = reaction.count
 	msg = reaction.message
 
-	if (!db.has(msg.id)){
-		try{
-			author = msg.member.displayName;
-		} catch{
-			author = msg.author.username;
-		}
+	if (msg.guildId === server){
 
-		try{
-			authorAvatar = msg.member.user.displayAvatarURL()
-			console.log("Member");
-		} catch{
-			authorAvatar = msg.author.displayAvatarURL();
-			console.log("Author");
-		}
-
-		console.log(authorAvatar);
-
-		var kekwedPost =  new MessageEmbed()
-			.setColor('test')
-			.setAuthor(author, authorAvatar)
-			.setDescription(msg.content)
-			.addField(`Message Link:`, `[Jump](${msg.url})`, true)
-			.addField(`Channel:`, `<#${msg.channelId}>`, true)
-			.setTimestamp();
-			// .setFooter(count + `⭐`);
-
-		if (msg.attachments.size >= 1) {
-			att = msg.attachments.first()
-			if (att.contentType === 'image/jpeg') {
-				kekwedPost.setImage(msg.attachments.first().url);
-			}else if(att.contentType === 'video/mp4'){
-				kekwedPost.setDescription(`${msg.content} \n \n [${att.name}](${att.url})`);
+		if(reaction.partial){
+			try{
+				await reaction.fetch();
+			} catch (error) {
+				console.error("Something went wrong fetching the message:", error);
+				return
 			}
 		}
 
-		if (emote.name.toLowerCase().includes("kekw") && count >= threshhold){
-			console.log("Met the threshhold");
-			client.channels.fetch(board).then(channel => channel.send({ embeds: [kekwedPost] }));
-			db.set(msg.id, {id: `${msg.id}`, timestamp: `${msg.createdAt}`});
-			db.sync();
+
+		if (!db.has(msg.id)){
+			try{
+				author = msg.member.displayName;
+			} catch{
+				author = msg.author.username;
+			}
+
+			try{
+				authorAvatar = msg.member.user.displayAvatarURL()
+				// console.log("Member");
+			} catch{
+				authorAvatar = msg.author.displayAvatarURL();
+				// console.log("Author");
+			}
+
+			// console.log(authorAvatar);
+
+			var kekwedPost =  new MessageEmbed()
+				.setColor('test')
+				.setAuthor(author, authorAvatar)
+				.setDescription(msg.content)
+				.addField(`Message Link:`, `[Jump](${msg.url})`, true)
+				.addField(`Channel:`, `<#${msg.channelId}>`, true)
+				.setTimestamp();
+				// .setFooter(count + `⭐`);
+
+			if (msg.attachments.size >= 1) {
+				att = msg.attachments.first()
+				if (att.contentType === 'image/jpeg') {
+					kekwedPost.setImage(msg.attachments.first().url);
+				}else if(att.contentType === 'video/mp4'){
+					kekwedPost.setDescription(`${msg.content} \n \n [${att.name}](${att.url})`);
+				}
+			}
+
+			if (emote.name.toLowerCase().includes("kekw") && count >= threshhold){
+				// console.log("Met the threshhold");
+				client.channels.fetch(board).then(channel => channel.send({ embeds: [kekwedPost] }));
+				db.set(msg.id, {id: `${msg.id}`, timestamp: `${msg.createdAt}`});
+				db.sync();
+			}
+			
 		}
-		
 	}
 });
 
