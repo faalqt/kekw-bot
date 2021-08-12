@@ -26,7 +26,7 @@ client.on('messageReactionAdd', async (reaction, user) =>{
 	msg = reaction.message
 
 	if (msg.guildId === server){
-		if(!msg.channel.nsfw){
+		if(!msg.channel.nsfw && msg.channel.id != board){
 			if(reaction.partial){
 				try{
 					await reaction.fetch();
