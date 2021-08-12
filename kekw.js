@@ -75,7 +75,7 @@ client.on('messageReactionAdd', async (reaction, user) =>{
 			if (emote.name.toLowerCase().includes("kekw") && count >= threshhold){
 				// console.log("Met the threshhold");
 				client.channels.fetch(board).then(channel => channel.send({ embeds: [kekwedPost] }));
-				db.set(msg.id, {id: `${msg.id}`, timestamp: `${msg.createdAt}`});
+				db.set(msg.id, {id: `${msg.id}`, content: `${msg.content}`, timestamp: `${msg.createdAt}`});
 				db.sync();
 			}
 			
