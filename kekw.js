@@ -1,7 +1,7 @@
 const JSONdb = require('simple-json-db');
 const db = new JSONdb('./data/messages.json');
 
-const { Client, Intents, MessageEmbed} = require('discord.js');
+const { Client, Intents, MessageEmbed, MessageAttachment} = require('discord.js');
 
 const client = new Client({ 
 	intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_MESSAGE_REACTIONS],
@@ -63,18 +63,26 @@ client.on('messageReactionAdd', async (reaction, user) =>{
 					.setTimestamp();
 					// .setFooter(count + `⭐`);
 
+				if(msg.embeds[0]){
+					if(msg.embeds[0].type.includes('image')){
+						kekwedPost.setImage(msg.embeds[0].url);
+					} else {
+						kekwedPost.addField('ahhh', 'Had trouble embeding attachment. Not a direct link?');
+					}
+				}
+
 				if (msg.attachments.size >= 1) {
 					att = msg.attachments.first()
-					if (att.contentType === 'image/jpeg') {
+					if (att.contentType.includes('image')){
 						kekwedPost.setImage(msg.attachments.first().url);
-					}else if(att.contentType === 'video/mp4'){
+					}else if(att.contentType.includes('video')){
 						kekwedPost.setDescription(`${msg.content} \n \n [${att.name}](${att.url})`);
 					}
 				}
 
 				if (emote.name.toLowerCase().includes("kekw") && count >= threshhold){
 					// console.log("Met the threshhold");
-					client.channels.fetch(board).then(channel => channel.send({ embeds: [kekwedPost] }));
+					client.channels.fetch(board).then(channel => channel.send({ embeds: [kekwedPost]}));
 					db.set(msg.id, {id: `${msg.id}`, content: `${msg.content}`, timestamp: `${msg.createdAt}`});
 					db.sync();
 				}
