@@ -12,8 +12,8 @@ const settings = require('./config/settings.json');
 const token = settings.botToken;
 const server = settings.serverID;
 const board = settings.boardID;
+const setEmote = settings.emote;
 const threshhold = settings.threshhold;
-
 
 client.once('ready', () => {
 	console.log('Ready!');
@@ -26,7 +26,9 @@ client.on('messageReactionAdd', async (reaction, user) =>{
 	msg = reaction.message
 
 	if (msg.guildId === server){
+		// console.log("Right server");
 		if(!msg.channel.nsfw && msg.channel.id != board){
+			// console.log("Not NSWF and Not the message board");
 			if(reaction.partial){
 				try{
 					await reaction.fetch();
@@ -36,8 +38,8 @@ client.on('messageReactionAdd', async (reaction, user) =>{
 				}
 			}
 
-
 			if (!db.has(msg.id)){
+				// console.log("message not already posted");
 				try{
 					author = msg.member.displayName;
 				} catch{
@@ -46,13 +48,9 @@ client.on('messageReactionAdd', async (reaction, user) =>{
 
 				try{
 					authorAvatar = msg.member.user.displayAvatarURL()
-					// console.log("Member");
 				} catch{
 					authorAvatar = msg.author.displayAvatarURL();
-					// console.log("Author");
 				}
-
-				// console.log(authorAvatar);
 
 				var kekwedPost =  new MessageEmbed()
 					.setColor('test')
@@ -63,7 +61,8 @@ client.on('messageReactionAdd', async (reaction, user) =>{
 					.setTimestamp();
 					// .setFooter(count + `⭐`);
 
-				if(msg.embeds[0]){
+				if(msg.embeds[0]){	
+					// console.log("msg has embeds");
 					if(msg.embeds[0].type.includes('image')){
 						kekwedPost.setImage(msg.embeds[0].url);
 					} else {
@@ -72,6 +71,7 @@ client.on('messageReactionAdd', async (reaction, user) =>{
 				}
 
 				if (msg.attachments.size >= 1) {
+					// console.log("message has attachments");
 					att = msg.attachments.first()
 					if (att.contentType.includes('image')){
 						kekwedPost.setImage(msg.attachments.first().url);
@@ -80,8 +80,8 @@ client.on('messageReactionAdd', async (reaction, user) =>{
 					}
 				}
 
-				if (emote.name.toLowerCase().includes("kekw") && count >= threshhold){
-					// console.log("Met the threshhold");
+				if (emote.name.toLowerCase().includes(setEmote) && count >= threshhold){
+					// console.log("message has met the threshhold");
 					client.channels.fetch(board).then(channel => channel.send({ embeds: [kekwedPost]}));
 					db.set(msg.id, {id: `${msg.id}`, content: `${msg.content}`, timestamp: `${msg.createdAt}`});
 					db.sync();

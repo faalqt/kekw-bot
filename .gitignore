@@ -1,5 +1,4 @@
 node_modules
 .env
-config.json
 config/settings.json
 data/messages.json
