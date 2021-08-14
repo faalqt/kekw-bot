@@ -12,7 +12,7 @@ const settings = require('./config/settings.json');
 const token = settings.botToken;
 const server = settings.serverID;
 const board = settings.boardID;
-const setEmote = settings.emote;
+const setEmote = settings.emote || 'kekw';
 const threshhold = settings.threshhold;
 
 client.once('ready', () => {
