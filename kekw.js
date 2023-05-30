@@ -59,7 +59,6 @@ client.on('messageReactionAdd', async (reaction, user) =>{
 					.addField(`Message Link:`, `[Jump](${msg.url})`, true)
 					.addField(`Channel:`, `<#${msg.channelId}>`, true)
 					.setTimestamp();
-					// .setFooter(count + `⭐`);
 
 				if(msg.embeds[0]){	
 					// console.log("msg has embeds");
